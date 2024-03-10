@@ -56,6 +56,11 @@ class Fragments(val viewModel: MainViewModel) {
                 modifier = Modifier.padding(all = 15.dp),
                 fontStyle = FontStyle.Italic
             )
+            if (allSongs_.isEmpty()) Text(
+                text = "Loading...",
+                color = MaterialTheme.colorScheme.secondary,
+                modifier = Modifier.padding(all = 10.dp)
+            )
             LazyColumn {
                 items(allSongs_) { song ->
                     SongCard(thisSong = song)
@@ -77,6 +82,11 @@ class Fragments(val viewModel: MainViewModel) {
                 fontSize = 18.sp,
                 modifier = Modifier.padding(all = 15.dp),
                 fontStyle = FontStyle.Italic
+            )
+            if (allSongs_.isEmpty()) Text(
+                text = "No suggestions yet",
+                color = MaterialTheme.colorScheme.secondary,
+                modifier = Modifier.padding(all = 10.dp)
             )
             LazyColumn {
                 items(allSongs_) { song ->

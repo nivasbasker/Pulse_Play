@@ -56,6 +56,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -70,6 +71,7 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
+import com.zio.pulseplay.R
 import com.zio.pulseplay.util.Helper
 import com.zio.pulseplay.util.MainViewModel
 import com.zio.pulseplay.data.Song
@@ -274,7 +276,9 @@ class MainActivity : AppCompatActivity() {
             )
 
             // Right Image
-            Icon(imageVector = if (playing) Icons.Default.Close else Icons.Default.PlayArrow,
+            Icon(painter = if (playing) painterResource(id = R.drawable.icon_pause) else painterResource(
+                id = R.drawable.icon_play
+            ),
                 contentDescription = "Play/Pause",
                 tint = Color.White,
                 modifier = Modifier
@@ -439,13 +443,15 @@ class MainActivity : AppCompatActivity() {
         ) {
             Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                 contentDescription = "Previous",
-                tint = Color.White,
+                tint = Color.Gray,
                 modifier = Modifier
                     .size(50.dp)
                     .padding(8.dp)
                     .clickable { })
             Spacer(modifier = Modifier.width(15.dp))
-            Icon(imageVector = if (isPlaying) Icons.Default.Close else Icons.Default.PlayArrow,
+            Icon(painter = if (isPlaying) painterResource(id = R.drawable.icon_pause) else painterResource(
+                id = R.drawable.icon_play
+            ),
                 contentDescription = "Play/Pause",
                 tint = Color.White,
                 modifier = Modifier
@@ -455,7 +461,7 @@ class MainActivity : AppCompatActivity() {
             Spacer(modifier = Modifier.width(15.dp))
             Icon(imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                 contentDescription = "Next",
-                tint = Color.White,
+                tint = Color.Gray,
                 modifier = Modifier
                     .size(50.dp)
                     .padding(8.dp)

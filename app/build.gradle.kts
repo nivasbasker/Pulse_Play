@@ -6,6 +6,14 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        create("release") {
+            storeFile = file("C:\\Users\\nivas\\Zio\\appkeys\\zioappkey.jks")
+            storePassword = "techie@234"
+            keyAlias = "ziokey0"
+            keyPassword = "techie234!"
+        }
+    }
     namespace = "com.zio.pulseplay"
     compileSdk = 34
 
@@ -34,6 +42,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
