@@ -2,6 +2,7 @@
 
 Pulse Play is an innovative Native Android Music Player App built using Kotlin, Jetpack Compose, and the MediaPlayer API at its core.
 <br/>Additional libs : Glide, Volley, Room
+<br/> Final Release APK availabe [here](https://github.com/nivasbasker/Pulse_Play/tree/master/outputs)
 
 ### Composable
 
