@@ -15,7 +15,10 @@ data class Song(
     @ColumnInfo(name = "title")
     val title: String,
     @ColumnInfo(name = "artist")
-    var artist: String
+    var artist: String,
+    @ColumnInfo(name = "accent")
+    var accent: String
+
 ) {
     @ColumnInfo(name = "time")
     var lastAccess: Long = 0
@@ -25,7 +28,10 @@ data class Song(
         song.songUrl,
         song.coverUrl,
         song.title,
-        song.artist
-    )
+        song.artist,
+        song.accent,
+    ) {
+        this.lastAccess = lastAccess
+    }
 
 }

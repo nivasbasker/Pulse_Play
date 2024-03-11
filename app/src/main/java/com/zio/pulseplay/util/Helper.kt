@@ -18,22 +18,7 @@ import org.json.JSONObject
  *  * Format duration in minutes to mm:ss form
  */
 class Helper(context: Context) {
-    interface PaletteCallback {
-        fun onPaletteGenerated(color1: Int, color2: Int)
-    }
 
-    fun createPaletteAsync(bitmap: Bitmap, callback: PaletteCallback) {
-        Palette.from(bitmap).generate(object : Palette.PaletteAsyncListener {
-            override fun onGenerated(palette: Palette?) {
-                // Use the generated instance.
-                val color1 = palette?.getDarkMutedColor(Color.BLACK) ?: Color.BLACK
-                val color2 = palette?.getLightMutedColor(Color.BLACK) ?: Color.BLACK
-
-                // Call the callback function with the colors
-                callback.onPaletteGenerated(color1, color2)
-            }
-        })
-    }
 
     private val queue = Volley.newRequestQueue(context)
     private val url = "https://cms.samespace.com/items/songs"
@@ -72,15 +57,47 @@ class Helper(context: Context) {
             val imageUrl = "https://cms.samespace.com/assets/${songObject.getString("cover")}"
             val title = songObject.getString("name")
             val artist = songObject.getString("artist")
+            val accent = songObject.getString("accent")
 
-            val song = Song(id, songUrl, imageUrl, title, artist)
+            val song = Song(id, songUrl, imageUrl, title, artist, accent)
             songs.add(song)
         }
 
         return songs
     }
 
+    interface PaletteCallback {
+        fun onPaletteGenerated(color1: Int, color2: Int)
+    }
+
+
     companion object {
+
+        // all constants
+        const val LOGTAG = "PP_LOG"
+        val dummySongList: List<Song> = listOf()
+        val dummySong = Song(
+            id = 0,
+            songUrl = "",
+            coverUrl = "",
+            title = "Unknown Song",
+            artist = "Unknown Artist",
+            accent = "#000000"
+        )
+
+        fun createPaletteAsync(bitmap: Bitmap, callback: PaletteCallback) {
+            Palette.from(bitmap).generate(object : Palette.PaletteAsyncListener {
+                override fun onGenerated(palette: Palette?) {
+                    // Use the generated instance.
+                    val color1 = palette?.getDarkMutedColor(Color.BLACK) ?: Color.BLACK
+                    val color2 = palette?.getLightMutedColor(Color.BLACK) ?: Color.BLACK
+
+                    // Call the callback function with the colors
+                    callback.onPaletteGenerated(color1, color2)
+                }
+            })
+        }
+
         fun formatTime(timeInMillis: Int): String {
             val totalSeconds = timeInMillis / 1000
             val minutes = totalSeconds / 60

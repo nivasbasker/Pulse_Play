@@ -82,7 +82,7 @@ class MusicService : Service() {
     }
 
     fun startPlay(song: Song) {
-        Log.e("TAG", "called play in service")
+        Log.e(Helper.LOGTAG, "Preparing to play new song")
         try {
             mediaPlayer?.apply {
                 reset()
@@ -96,20 +96,25 @@ class MusicService : Service() {
             }
         } catch (error: Exception) {
             callback?.onPlaybackError()
-            Log.e("TAG", "unable to play")
+            Log.e(Helper.LOGTAG, "unable to play")
         }
     }
 
     fun resumePlay() {
-        mediaPlayer.start()
-        setProgressor()
+        try {
+            mediaPlayer.start()
+            setProgressor()
+        } catch (e: Exception) {
+            throw IllegalAccessError("Data source Not ready")
+        }
+
     }
 
     fun pausePlay() {
         if (mediaPlayer.isPlaying) {
             mediaPlayer.pause()
             removeProgressor()
-        }
+        } else throw IllegalAccessError("Not playing")
     }
 
     fun stopPlay() {

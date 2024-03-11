@@ -38,14 +38,11 @@ import com.zio.pulseplay.data.Song
 import com.zio.pulseplay.util.Helper
 import com.zio.pulseplay.util.MainViewModel
 
-class Fragments(val viewModel: MainViewModel) {
-
-    var mySongs: List<Song> = listOf()
+class Fragments() {
 
     @Composable
-    fun TopTracksFragment() {
+    fun TopTracksFragment(allSongs_: List<Song>, playRequest: (Song) -> Unit) {
 
-        val allSongs_: List<Song> by viewModel.allSongs.observeAsState(initial = mySongs)
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
@@ -63,7 +60,9 @@ class Fragments(val viewModel: MainViewModel) {
             )
             LazyColumn {
                 items(allSongs_) { song ->
-                    SongCard(thisSong = song)
+                    SongCard(thisSong = song) {
+                        playRequest(song)
+                    }
                 }
             }
 
@@ -71,8 +70,7 @@ class Fragments(val viewModel: MainViewModel) {
     }
 
     @Composable
-    fun ForYouFragment() {
-        val allSongs_: List<Song> by viewModel.recentSongs.observeAsState(initial = mySongs)
+    fun ForYouFragment(allSongs_: List<Song>, playRequest: (Song) -> Unit) {
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
@@ -90,7 +88,9 @@ class Fragments(val viewModel: MainViewModel) {
             )
             LazyColumn {
                 items(allSongs_) { song ->
-                    SongCard(thisSong = song)
+                    SongCard(thisSong = song) {
+                        playRequest(song)
+                    }
                 }
             }
 
@@ -99,13 +99,12 @@ class Fragments(val viewModel: MainViewModel) {
 
     @OptIn(ExperimentalGlideComposeApi::class)
     @Composable
-    fun SongCard(thisSong: Song) {
+    fun SongCard(thisSong: Song, onRequest: () -> Unit) {
         Row(modifier = Modifier
             .padding(all = 10.dp)
             .fillMaxSize()
             .clickable {
-                viewModel.play(thisSong)
-
+                onRequest()
             }) {
 
             GlideImage(

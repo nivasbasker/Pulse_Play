@@ -13,6 +13,7 @@ import androidx.lifecycle.viewModelScope
 import com.zio.pulseplay.util.MusicService.MusicServiceCallback
 import com.zio.pulseplay.data.DataBase
 import com.zio.pulseplay.data.Song
+import com.zio.pulseplay.util.Helper.Companion.LOGTAG
 import kotlinx.coroutines.launch
 
 
@@ -102,7 +103,6 @@ class MainViewModel() : ViewModel() {
     }
 
     fun play(song: Song) {
-        Log.e("TAG", "called play")
         _currentSong.value = song
         musicService?.startPlay(song)
         _state.value = STATE_PLAYING
@@ -113,29 +113,31 @@ class MainViewModel() : ViewModel() {
         val db = DataBase.getInstance(context)
         val songDao = db.yourEntityDao()
 
-        songDao.insert(Song(System.currentTimeMillis(), song))
-        retrieve(context)
-
-    }
-
-    suspend fun retrieve(context: Context) {
-        val db = DataBase.getInstance(context)
-        val songDao = db.yourEntityDao()
-        val topf = songDao.getTopFive()
-
+        if (song.id > 0) //avoid invalid songs
+            songDao.insert(Song(System.currentTimeMillis(), song))
+        val topFive = songDao.getTopFive()
         viewModelScope.launch {
-            _recentSongs.value = topf
+            _recentSongs.value = topFive
         }
+
     }
 
     fun resume() {
-        musicService?.resumePlay()
-        _state.value = STATE_PLAYING
+        try {
+            musicService?.resumePlay()
+            _state.value = STATE_PLAYING
+        } catch (e: Exception) {
+            Log.d(LOGTAG, "Music service says : " + e.message)
+        }
     }
 
     fun pause() {
-        musicService?.pausePlay()
-        _state.value = STATE_PAUSED;
+        try {
+            musicService?.pausePlay()
+            _state.value = STATE_PAUSED;
+        } catch (e: IllegalAccessError) {
+            Log.d(LOGTAG, "Music service says : " + e.message)
+        }
     }
 
     fun stop() {
@@ -147,12 +149,22 @@ class MainViewModel() : ViewModel() {
 
         Helper(context).fetchSongs(
             onSuccess = { songs ->
-                Log.d("TAG", "Fetched ${songs.size} songs")
+                Log.d(LOGTAG, "Fetched ${songs.size} songs")
                 _allSongs.value = songs;
             },
             onError = { errorMessage ->
-                Log.e("TAG", errorMessage)
+                Log.e(LOGTAG, errorMessage)
             }
         )
+    }
+
+    suspend fun retrieve(context: Context) {
+        val db = DataBase.getInstance(context)
+        val songDao = db.yourEntityDao()
+        val topf = songDao.getTopFive()
+
+        viewModelScope.launch {
+            _recentSongs.value = topf
+        }
     }
 }
