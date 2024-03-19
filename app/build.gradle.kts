@@ -13,20 +13,17 @@ android {
             isEnable = true
             isUniversalApk = true
         }
-        /*density {
-            isEnable = true
-            exclude()
-        }
-         */
     }
 
     signingConfigs {
         create("release") {
             storeFile = file("C:\\Users\\nivas\\Zio\\appkeys\\zioappkey.jks")
-            storePassword = "techie@234"
+            storePassword = project.findProperty("storePassword").toString()
             keyAlias = "ziokey0"
-            keyPassword = "techie234!"
+            keyPassword = project.findProperty("keyPassword").toString()
         }
+
+
     }
     namespace = "com.zio.pulseplay"
     compileSdk = 34
@@ -110,11 +107,8 @@ dependencies {
     // Material Design 3
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.material:material:1.6.3")
-    // or skip Material Design and build directly on top of foundational components
     implementation("androidx.compose.foundation:foundation")
-    // or only import the main APIs for the underlying toolkit systems,
-    // such as input and measurement/layout
-    implementation("androidx.compose.ui:ui")
+    //implementation("androidx.compose.ui:ui")
     implementation("androidx.navigation:navigation-compose:2.7.7")
 
     // Android Studio Preview support
@@ -128,6 +122,6 @@ dependencies {
     // Optional - Integration with LiveData
     implementation("androidx.compose.runtime:runtime-livedata")
     // Optional - Integration with RxJava
-    implementation("androidx.compose.runtime:runtime-rxjava2")
+    //implementation("androidx.compose.runtime:runtime-rxjava2")
 
 }
