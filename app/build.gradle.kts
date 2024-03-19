@@ -6,6 +6,20 @@ plugins {
 }
 
 android {
+
+    splits {
+
+        abi {
+            isEnable = true
+            isUniversalApk = true
+        }
+        /*density {
+            isEnable = true
+            exclude()
+        }
+         */
+    }
+
     signingConfigs {
         create("release") {
             storeFile = file("C:\\Users\\nivas\\Zio\\appkeys\\zioappkey.jks")
@@ -23,8 +37,18 @@ android {
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // Ensure compatibility with different screen densities
+        multiDexEnabled = true
+        // Add support for different ABIs (Application Binary Interfaces)
+        ndk {
+            abiFilters.add("armeabi-v7a")
+            abiFilters.add("arm64-v8a")
+            abiFilters.add("x86")
+            abiFilters.add("x86_64")
+        }
+
     }
     buildFeatures {
         compose = true
