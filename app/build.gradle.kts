@@ -1,9 +1,16 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.kapt")
 
 }
+
+val keystorePropertiesFile = rootProject.file("keystore.properties")
+val keystoreProperties = Properties()
+keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 
 android {
 
@@ -14,17 +21,17 @@ android {
             isUniversalApk = true
         }
     }
-
     signingConfigs {
+
         create("release") {
-            storeFile = file("C:\\Users\\nivas\\Zio\\appkeys\\zioappkey.jks")
-            storePassword = project.findProperty("storePassword").toString()
-            keyAlias = "ziokey0"
-            keyPassword = project.findProperty("keyPassword").toString()
+
+            keyAlias = keystoreProperties["keyAlias"] as String
+            keyPassword = keystoreProperties["keyPassword"] as String
+            storeFile = file(keystoreProperties["storeFile"] as String)
+            storePassword = keystoreProperties["storePassword"] as String
         }
-
-
     }
+
     namespace = "com.zio.pulseplay"
     compileSdk = 34
 
